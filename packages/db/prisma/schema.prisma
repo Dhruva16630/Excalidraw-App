@@ -8,30 +8,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id       String @id @default(uuid())
-  email    String
-  password String
+model User {
+  id          String       @id @default(uuid())
+  email       String       @unique
+  username    String
+  password    String
+  rooms       Room[]       @relation("RoomMembers")
+  ownedRooms  Room[]       @relation("RoomOwner")
+  messages    Message[]    @relation("SentMessages") 
+}
+
+model Room {
+  id       Int      @id @default(autoincrement())
   name     String
-  photo    String
-  rooms    Room[]
-  chat     Chat[]
+  ownerId  String
+  owner    User     @relation("RoomOwner", fields: [ownerId], references: [id])
+  members  User[]   @relation("RoomMembers")
+  messages Message[]
 }
 
-model Room{
-  id         Int   @id @default(autoincrement())
-  slug       String   @unique
-  createdAt  DateTime @default(now())
-  adminId    String
-  admin      User @relation(fields: [adminId], references: [id])
-  chat       Chat[]
-}
-
-model Chat{
-  id       Int  @id @default(autoincrement())
-  roomId   Int
-  message  String
-  userId   String
-  room     Room   @relation(fields: [roomId], references: [id])
-  user     User   @relation(fields: [userId], references: [id])
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  senderId  String
+  sender    User     @relation("SentMessages", fields: [senderId], references: [id]) 
+  roomId    Int
+  room      Room     @relation(fields: [roomId], references: [id])
+  createdAt DateTime @default(now())
 }
