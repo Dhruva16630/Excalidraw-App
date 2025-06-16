@@ -3,6 +3,7 @@ import z from "zod"
 const app = express();
 
 
+
 app.post("/signup", (req, res) =>{
     const requiredBody = z.object({
         email: z.string().min(3).max(12).email(),
