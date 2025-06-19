@@ -71,7 +71,7 @@ app.post("/signin", async ( req: Request , res: Response ) => {
       
       const isPasswordValid = await bcrypt.compare(password, checkUser?.password )
       if(isPasswordValid){
-       
+       const token = 
       }
       }catch{
 
@@ -82,7 +82,7 @@ app.post("/signin", async ( req: Request , res: Response ) => {
 
 
 
-app.post("/room", (req, res) => {
-
+app.post("/room", (req: Request, res: Response) => {
+    
 })
 app.listen(3001);
