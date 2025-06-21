@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import { SignupZod, SigninZod } from "@repo/common/types";
 import { prisma } from "@repo/db/client";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET_CHAT } from "@repo/backend-common/secret";
 const app = express();
 app.use(express.json());
 
@@ -15,7 +17,6 @@ app.post("/signup", async ( req: Request, res: Response ) =>{
     })
     return
    }
-    const { email, password, username } = req.body;
 
    try{
     const existingUser = await prisma.user.findUnique({
@@ -53,8 +54,7 @@ app.post("/signin", async ( req: Request , res: Response ) => {
         })
         return
       }
-     const { email, password } = req.body;
-
+     
       try{
         const checkUser = await prisma.user.findUnique({
         where:{ 
@@ -69,15 +69,34 @@ app.post("/signin", async ( req: Request , res: Response ) => {
         return
       }
       
-      const isPasswordValid = await bcrypt.compare(password, checkUser?.password )
-      if(isPasswordValid){
-       const token = 
+      const isPasswordValid = await bcrypt.compare(checkUser.password, checkUser?.password )
+      if( JWT_SECRET_CHAT == null ){
+        return
       }
-      }catch{
 
+      if(isPasswordValid){
+       const token = jwt.sign({
+        userID:checkUser.id
+       }, JWT_SECRET_CHAT,{
+        expiresIn:"16d"
+       });
+       res.json({
+        token:token
+       })
+       return
+      }else{
+        res.status(403).json({
+            message: "Incorrect Password"
+        })
+        return
       }
       
-    
+      }catch(error){
+        res.status(500).json({
+            message:"Server error"
+        })
+      }
+      return  
 })
 
 
