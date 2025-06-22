@@ -36,3 +36,5 @@ model Message {
   room      Room     @relation(fields: [roomId], references: [id])
   createdAt DateTime @default(now())
 }
+
+
