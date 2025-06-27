@@ -4,6 +4,7 @@ import { prisma } from "@repo/db/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET_CHAT } from "@repo/backend-common/secret";
+import { middleware } from "@repo/backend-common/middleware"
 const app = express();
 app.use(express.json());
 
@@ -101,7 +102,7 @@ app.post("/signin", async ( req: Request , res: Response ) => {
 
 
 
-app.post("/room", (req: Request, res: Response) => {
+app.post("/room", middleware, (req: Request, res: Response) => {
     
 })
 app.listen(3001);
