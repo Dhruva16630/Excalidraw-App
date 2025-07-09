@@ -11,10 +11,10 @@
   "dependencies": {
     "@repo/common": "workspace:*",
     "@repo/db": "workspace:*",
+    "@repo/backend-common": "workspace:*",
     "bcrypt": "^6.0.0",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "@repo/backend-common": "workspace:*"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
