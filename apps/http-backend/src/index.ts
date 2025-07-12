@@ -28,20 +28,32 @@ app.post("/signup", async ( req: Request, res: Response ) =>{
         res.status(400).json({
             message: "User already exist"
         })
+        return
     }
     const hashedPassword = await bcrypt.hash(paresdData.data.password,10);
-
-    await prisma.user.create({
+    
+    const user = await prisma.user.create({
         data:{
             email:paresdData.data.email,
             password:hashedPassword,
             username:paresdData.data.username
         }
     })
+    res.json({
+        message: "user created",
+        user :{
+            id : user.id,
+            hesru: user.username,
+            gmail: user.email,
+            password: user.password
+        }
+    })
+    return
    }catch{
     res.status(500).json({
         message: "An unexpected error occured"
     })
+    return
    }
 })
 
@@ -79,7 +91,7 @@ app.post("/signin", async ( req: Request , res: Response ) => {
        const token = jwt.sign({
         userID:checkUser.id
        }, JWT_SECRET_CHAT,{
-        expiresIn:"16d"
+        expiresIn:"28d"
        });
        res.json({
         token:token
