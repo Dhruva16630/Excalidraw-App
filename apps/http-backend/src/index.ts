@@ -3,8 +3,8 @@ import { SignupZod, SigninZod } from "@repo/common/types";
 import { prisma } from "@repo/db/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET_CHAT } from "@repo/backend-common/secret";
-import { middleware } from "@repo/backend-common/middleware"
+import { middleware } from "@repo/backend-common/middleware";
+import { JWT_SECRET_CHAT } from "./secret";
 const app = express();
 app.use(express.json());
 
@@ -71,7 +71,7 @@ app.post("/signin", async ( req: Request , res: Response ) => {
       try{
         const checkUser = await prisma.user.findUnique({
         where:{ 
-            email:parsed.data?.email,
+            email:parsed.data.email,
          }    
       })
 
@@ -82,8 +82,11 @@ app.post("/signin", async ( req: Request , res: Response ) => {
         return
       }
       
-      const isPasswordValid = await bcrypt.compare(checkUser.password, checkUser?.password )
+      const isPasswordValid = await bcrypt.compare(parsed.data.password, checkUser.password )
       if( JWT_SECRET_CHAT == null ){
+        res.status(500).json({
+            message: "Unexpected Error"
+        })
         return
       }
 

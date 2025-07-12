@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "exports": {
-    "./secret": "./dist/secret.js",
     "./middleware": "./dist/middleware.js"
   },
   "scripts": {
