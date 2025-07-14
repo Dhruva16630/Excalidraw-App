@@ -3,10 +3,14 @@ import { SignupZod, SigninZod } from "@repo/common/types";
 import { prisma } from "@repo/db/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { middleware } from "@repo/backend-common/middleware";
-import { JWT_SECRET_CHAT } from "./secret";
+import { middleware } from "@repo/backend-common/middleware"
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({path: path.resolve(__dirname,"../../../.env") })
 const app = express();
 app.use(express.json());
+
+
 
 
 app.post("/signup", async ( req: Request, res: Response ) =>{
@@ -77,13 +81,13 @@ app.post("/signin", async ( req: Request , res: Response ) => {
 
       if(!checkUser){
         res.status(404).json({
-            message:"User not found"
+            message:"Invalid Email or Password"
         })
         return
       }
       
       const isPasswordValid = await bcrypt.compare(parsed.data.password, checkUser.password )
-      if( JWT_SECRET_CHAT == null ){
+      if( process.env.JWT_SECRET == null ){
         res.status(500).json({
             message: "Unexpected Error"
         })
@@ -93,7 +97,7 @@ app.post("/signin", async ( req: Request , res: Response ) => {
       if(isPasswordValid){
        const token = jwt.sign({
         userID:checkUser.id
-       }, JWT_SECRET_CHAT,{
+       }, process.env.JWT_SECRET,{
         expiresIn:"28d"
        });
        res.json({
@@ -102,7 +106,7 @@ app.post("/signin", async ( req: Request , res: Response ) => {
        return
       }else{
         res.status(403).json({
-            message: "Incorrect Password"
+            message: "Incorrect Email or Password"
         })
         return
       }
@@ -117,9 +121,21 @@ app.post("/signin", async ( req: Request , res: Response ) => {
 
 
 
-app.post("/room", middleware, (req: Request, res: Response) => {
+app.post("/room",middleware, (req: Request, res: Response) => {
+    try{
+        console.log("indise room")
+    }catch(error){
+        res.json({
+            message: "error code"
+        })
+    }
+    
+
     
 })
+
+
+
 app.listen(3001, ()=>{
     console.log("Server is running in port 3001")
 });
