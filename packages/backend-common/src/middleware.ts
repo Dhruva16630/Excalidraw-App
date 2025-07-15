@@ -1,4 +1,4 @@
-console.log("middleware.ts loaded");
+// console.log("middleware.ts loaded");
 
 
 
@@ -16,7 +16,7 @@ const app = express();
 app.use(express.json());
 
 export function middleware(req: Request, res: Response, next: NextFunction): void {
-  console.log("Inside middleware");
+  // console.log("Inside middleware");
 
   const authHeader = req.headers.authorization;
 
@@ -28,8 +28,8 @@ export function middleware(req: Request, res: Response, next: NextFunction): voi
   const token = authHeader.split(" ")[1];
 
   const jwtSecret = process.env.JWT_SECRET;
-  console.log("JWT Secret:", jwtSecret);
-  console.log("Token:", token); 
+  // console.log("JWT Secret:", jwtSecret);
+  // console.log("Token:", token); 
   if (!jwtSecret) {
     res.status(500).json({ error: "JWT_SECRET not set in environment" });
     return
@@ -40,9 +40,9 @@ export function middleware(req: Request, res: Response, next: NextFunction): voi
   }
   try {
     const decoded = jwt.verify(token, jwtSecret);
-    console.log("Decoded token:", decoded);
+    // console.log("Decoded token:", decoded);
     req.userID = decoded;
-    console.log("Token verified");
+    // console.log("Token verified");
     res.json({
       message: "Token is valid",})
     next();

@@ -121,18 +121,18 @@ app.post("/signin", async ( req: Request , res: Response ) => {
 
 
 
-app.post("/room",middleware, (req: Request, res: Response) => {
-    try{
-        console.log("indise room")
-    }catch(error){
+app.post("/room", middleware, (req: Request, res: Response) => {
+    try {
+        // console.log("indise room");
         res.json({
+            message: "Room endpoint reached"
+        });
+    } catch (error) {
+        res.status(500).json({
             message: "error code"
-        })
+        });
     }
-    
-
-    
-})
+});
 
 
 
